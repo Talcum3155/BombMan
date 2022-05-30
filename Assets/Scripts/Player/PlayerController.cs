@@ -1,4 +1,4 @@
-using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Player
@@ -14,16 +14,17 @@ namespace Player
         public Transform groundChecker;
 
         [Header("StatusCheck")] public bool canJump;
+        public bool isJump;
         public bool isGround;
-        
+
         [Header("Component")] private Rigidbody2D _rigidbody2D;
-        private Animator _animator;
-        private static readonly int Running = Animator.StringToHash("Running");
+
+        [Header("FX")] public GameObject jumpFX;
+        public GameObject landFX;
 
         private void Start()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
-            _animator = GetComponent<Animator>();
         }
 
         private void Update()
@@ -42,26 +43,28 @@ namespace Player
 
         private void Movement()
         {
-            var axisH = Input.GetAxisRaw("Horizontal"); //获取的键程最大，只有-1与1
+            var axisH = Input.GetAxis("Horizontal"); //获取的键程最大，只有-1与1
 
             _rigidbody2D.velocity = new Vector2(axisH * speed, _rigidbody2D.velocity.y);
 
-            if (axisH != 0)
+            transform.eulerAngles = axisH switch
             {
-                _animator.SetBool(Running, true);
-                transform.localScale = new Vector3(axisH, 1, 1);
-                return;
-            }
-
-            _animator.SetBool(Running, false);
+                > 0 => new Vector3(0, 0, 0),
+                < 0 => new Vector3(0, 180, 0),
+                _ => transform.eulerAngles
+            };
         }
 
+        /// <summary>
+        /// 跳跃的时候将重力增大，可以增加手感
+        /// </summary>
         private void Jump()
         {
             if (!canJump) return;
 
+            isJump = true;
             _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpForce);
-            _rigidbody2D.gravityScale = jumpGravityScale;
+            _rigidbody2D.gravityScale = jumpGravityScale; //增大重力
             canJump = false;
         }
 
@@ -78,6 +81,7 @@ namespace Player
             if (isGround)
             {
                 _rigidbody2D.gravityScale = 1;
+                isJump = false;
                 return;
             }
 
@@ -87,6 +91,36 @@ namespace Player
         private void OnDrawGizmos()
         {
             Gizmos.DrawSphere(groundChecker.position, checkRadius);
+        }
+
+        #endregion
+
+        #region 动画事件
+
+        public void ShowJumpFX()
+        {
+            jumpFX.SetActive(true);
+            jumpFX.transform.position = transform.position + new Vector3(0.15f, -0.5f, 0);
+        }
+
+        public void ShowLandFX()
+        {
+            landFX.SetActive(true);
+            landFX.transform.position = transform.position + new Vector3(0, -0.75f, 0);
+        }
+
+        public void ShowRunFX()
+        {
+            var runFx = ObjectPools.Instance.GetRunFXObject();
+            runFx.transform.parent = transform.parent;
+            runFx.transform.localEulerAngles = transform.localEulerAngles;
+            
+            runFx.transform.localPosition = runFx.transform.localEulerAngles.y switch
+            {
+                <180 => transform.localPosition + new Vector3(-0.5f, -0.75f, 0),
+                >=180 => transform.localPosition + new Vector3(0.6f, -0.75f, 0)
+            };
+            runFx.SetActive(true);
         }
 
         #endregion

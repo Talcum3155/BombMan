@@ -14,7 +14,7 @@ TagManager:
   - Ground
   - Environment
   - NPC
-  - 
+  - Bomb
   - 
   - 
   - 
@@ -46,4 +46,7 @@ TagManager:
     locked: 0
   - name: NPC
     uniqueID: 4205702241
+    locked: 0
+  - name: Bomb
+    uniqueID: 2336660715
     locked: 0
