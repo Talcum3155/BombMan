@@ -22,6 +22,10 @@ namespace Player
         [Header("FX")] public GameObject jumpFX;
         public GameObject landFX;
 
+        [Header("Attack")] public float nextAttackTime;
+        public GameObject projectile;
+        public float attackCutDown;
+
         private void Start()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
@@ -30,6 +34,7 @@ namespace Player
         private void Update()
         {
             StatusCheck();
+            Attack();
         }
 
         private void FixedUpdate()
@@ -91,6 +96,17 @@ namespace Player
         private void OnDrawGizmos()
         {
             Gizmos.DrawSphere(groundChecker.position, checkRadius);
+        }
+
+        #endregion
+
+        #region 攻击相关
+
+        private void Attack()
+        {
+            if (!(Time.time >= nextAttackTime && Input.GetButtonDown("Fire1"))) return;
+            Instantiate(projectile,transform.position,transform.rotation);
+            nextAttackTime = Time.time + attackCutDown;
         }
 
         #endregion
