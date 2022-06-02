@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Bomb
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -16,8 +18,8 @@ TagManager:
   - NPC
   - Bomb
   - FX
-  - 
-  - 
+  - Player
+  - CheckArea
   - 
   - 
   - 
@@ -44,9 +46,9 @@ TagManager:
   - name: Objects
     uniqueID: 85894369
     locked: 0
+  - name: Player
+    uniqueID: 460583501
+    locked: 0
   - name: NPC
     uniqueID: 4205702241
-    locked: 0
-  - name: Bomb
-    uniqueID: 2336660715
     locked: 0

@@ -1,13 +1,17 @@
+using System;
+using Enemy;
 using Unity.Mathematics;
 using UnityEngine;
 
 namespace Player
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, IDamage
     {
         [Header("Parameters")] public float speed;
         public float jumpForce;
         [Tooltip("跳跃到空中时的重力")] public float jumpGravityScale;
+        public float health;
+        public bool isDead;
 
         [Header("GroundCheck")] public LayerMask groundMask;
         public float checkRadius;
@@ -18,6 +22,7 @@ namespace Player
         public bool isGround;
 
         [Header("Component")] private Rigidbody2D _rigidbody2D;
+        private Animator _animator;
 
         [Header("FX")] public GameObject jumpFX;
         public GameObject landFX;
@@ -26,22 +31,41 @@ namespace Player
         public GameObject projectile;
         public float attackCutDown;
 
+        private static readonly int Jump = Animator.StringToHash("jump");
+        private static readonly int Speed = Animator.StringToHash("speed");
+        private static readonly int VelocityY = Animator.StringToHash("velocityY");
+        private static readonly int Ground = Animator.StringToHash("ground");
+        private static readonly int GetHit = Animator.StringToHash("GetHit");
+        private static readonly int Dead = Animator.StringToHash("Dead");
+
         private void Start()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
+            _animator = GetComponent<Animator>();
         }
 
         private void Update()
         {
+            if (isDead)
+            {
+                return;
+            }
+
             StatusCheck();
             Attack();
+            CheckAnimatorStatus();
         }
 
         private void FixedUpdate()
         {
+            if (isDead)
+            {
+                return;
+            }
+
             CheckGround();
             Movement();
-            Jump();
+            JumpControl();
         }
 
         #region 移动相关
@@ -54,8 +78,8 @@ namespace Player
 
             transform.eulerAngles = axisH switch
             {
-                > 0 => new Vector3(0, 0, 0),
-                < 0 => new Vector3(0, 180, 0),
+                > 0 => Vector3.zero,
+                < 0 => Vector3.up * 180,
                 _ => transform.eulerAngles
             };
         }
@@ -63,7 +87,7 @@ namespace Player
         /// <summary>
         /// 跳跃的时候将重力增大，可以增加手感
         /// </summary>
-        private void Jump()
+        private void JumpControl()
         {
             if (!canJump) return;
 
@@ -105,7 +129,7 @@ namespace Player
         private void Attack()
         {
             if (!(Time.time >= nextAttackTime && Input.GetButtonDown("Fire1"))) return;
-            Instantiate(projectile,transform.position,transform.rotation);
+            Instantiate(projectile, transform.position, transform.rotation);
             nextAttackTime = Time.time + attackCutDown;
         }
 
@@ -122,21 +146,66 @@ namespace Player
         public void ShowLandFX()
         {
             landFX.SetActive(true);
-            landFX.transform.position = transform.position + new Vector3(0, -0.75f, 0);
+            // landFX.transform.position = transform.position + new Vector3(0, -0.75f, 0);
+            landFX.transform.position = transform.position + Vector3.up * -0.75f;
         }
 
         public void ShowRunFX()
         {
+            if (_animator.GetCurrentAnimatorStateInfo(1).IsTag("HitLayer"))
+            {
+                Debug.Log("不需要奔跑");
+                return;
+            }
+
             var runFx = ObjectPools.Instance.GetRunFXObject();
             runFx.transform.parent = transform.parent;
             runFx.transform.localEulerAngles = transform.localEulerAngles;
-            
+
             runFx.transform.localPosition = runFx.transform.localEulerAngles.y switch
             {
                 <180 => transform.localPosition + new Vector3(-0.5f, -0.75f, 0),
-                >=180 => transform.localPosition + new Vector3(0.6f, -0.75f, 0)
+                >=180 => transform.localPosition + new Vector3(0.6f, -0.75f, 0),
+                _ => runFx.transform.localPosition
             };
             runFx.SetActive(true);
+        }
+
+        #endregion
+
+        #region 动画控制
+
+        private void CheckAnimatorStatus()
+        {
+            _animator.SetBool(Ground, isGround);
+            _animator.SetFloat(VelocityY, _rigidbody2D.velocity.y);
+            _animator.SetBool(Jump, isJump);
+            _animator.SetFloat(Speed, Mathf.Abs(_rigidbody2D.velocity.x));
+        }
+
+        #endregion
+
+        #region 受伤或死亡
+
+        public void GetDamage(float damage)
+        {
+            //受伤的过程中是无敌的
+            if (_animator.GetCurrentAnimatorStateInfo(0).IsTag("HitLayer"))
+            {
+                return;
+            }
+
+            health = Mathf.Max(health - damage, 0);
+
+            if (health == 0)
+            {
+                Debug.Log("角色死亡");
+                isDead = true;
+                _animator.SetTrigger(Dead);
+                return;
+            }
+
+            _animator.SetTrigger(GetHit);
         }
 
         #endregion
