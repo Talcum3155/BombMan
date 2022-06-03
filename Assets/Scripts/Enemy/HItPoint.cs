@@ -6,7 +6,8 @@ namespace Enemy
     public class HItPoint : MonoBehaviour
     {
         public float damage;
-        
+        public bool bombAvailable;
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.CompareTag("Player"))
@@ -14,9 +15,11 @@ namespace Enemy
                 other.GetComponent<PlayerController>().GetDamage(damage);
             }
 
-            if (other.CompareTag("Bomb"))
+            if (bombAvailable && other.CompareTag("Bomb"))
             {
-                Debug.Log("吹灭炸弹");
+                var normalized = (other.transform.position - transform.position).normalized;
+                other.GetComponent<Rigidbody2D>()
+                    .AddForce(new Vector2(normalized.x, normalized.y) * 10, ForceMode2D.Impulse);
             }
         }
     }

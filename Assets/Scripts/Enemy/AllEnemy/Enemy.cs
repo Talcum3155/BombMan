@@ -30,7 +30,7 @@ namespace Enemy.AllEnemy
         private Animator _alarmAnimator;
 
         public readonly int AnimState =
-            Animator.StringToHash("animState");
+            Animator.StringToHash("AnimState");
 
         public readonly int Attack =
             Animator.StringToHash("Attack");
@@ -153,6 +153,7 @@ namespace Enemy.AllEnemy
 
         private void OnTriggerEnter2D(Collider2D other)
         {
+            if (isDead) return;
             if (other.CompareTag("Player") || other.CompareTag("Bomb"))
             {
                 StartCoroutine(ShowAlarm());
