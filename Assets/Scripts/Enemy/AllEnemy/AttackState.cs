@@ -51,27 +51,38 @@ namespace Enemy.AllEnemy
                 Debug.Log("只剩一个目标");
                 enemy.targetPoint = enemy.targets[0].transform;
             }
-            
+
             if (enemy.targetPoint.gameObject.CompareTag("Bomb"))
             {
-                if (enemy.SkillAction())
-                {
-                    Debug.Log("成功吹灭，更换目标");
-                    if (enemy.targets[0])
-                    {
-                        enemy.targetPoint = enemy.targets[0].transform;
-                    }
-                    return;
-                }
-                Debug.Log("吹灭失败，跑路");
+                var stateCode = enemy.SkillAction();
                 
+                switch (stateCode)
+                {
+                    //成功释放了技能，更换目标
+                    case 0:
+                        if (enemy.targets[0])
+                        {
+                            enemy.targetPoint = enemy.targets[0].transform;
+                        }
+                        Debug.Log("成功，更换目标");
+                        return;
+                    //距离太远就什么也不做
+                    case 1:
+                        Debug.Log("太远了");
+                        break;
+                    //距离足够但是CD没到，就直接跑
+                    case 2:
+                        // enemy.SwitchPoint();
+                        Debug.Log("跑路");
+                        break;
+                }
             }
-            
+
             if (enemy.targetPoint.gameObject.CompareTag("Player"))
             {
                 enemy.AttackAction();
             }
-            
+
             enemy.MoveToTarget();
         }
     }

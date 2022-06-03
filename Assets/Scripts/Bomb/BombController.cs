@@ -81,6 +81,7 @@ namespace Bomb
             var overlapCircle =
                 Physics2D.OverlapCircleAll(transform.position, radius, targetLayer);
 
+            _rigidbody2D.velocity=Vector2.zero;
             _rigidbody2D.gravityScale = 0; //防止取消碰撞体后掉出世界
 
             foreach (var collider2D1 in overlapCircle)

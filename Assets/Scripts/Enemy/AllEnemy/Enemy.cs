@@ -52,7 +52,7 @@ namespace Enemy.AllEnemy
             _alarmAnimator = _alarmSign.GetComponent<Animator>();
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             Init();
         }
@@ -124,15 +124,23 @@ namespace Enemy.AllEnemy
             _nextAttackTime = Time.time + attackCutDown;
         }
 
-        public virtual bool SkillAction()
+        public virtual int SkillAction()
         {
             //距离够近且冷却已经结束才能进行攻击
             if (!(Vector2.Distance(transform.position,
-                targetPoint.position) <= skillRange) || !(Time.time >= _nextAttackTime)) return false;
+                targetPoint.position) <= skillRange))
+            {
+                return 1; //返回1说明距离太远
+            }
+
+            if (!(Time.time >= _nextAttackTime))
+            {
+                return 2; //返回2说明冷却时间不够
+            }
 
             animator.SetTrigger(Skill);
             _nextAttackTime = Time.time + attackCutDown;
-            return true;
+            return 0;
         }
 
         private void OnTriggerStay2D(Collider2D other)
@@ -143,7 +151,7 @@ namespace Enemy.AllEnemy
             }
         }
 
-        private void OnTriggerExit2D(Collider2D other)
+        protected virtual void OnTriggerExit2D(Collider2D other)
         {
             if (targets.Contains(other.gameObject))
             {
@@ -163,8 +171,7 @@ namespace Enemy.AllEnemy
         private IEnumerator ShowAlarm()
         {
             _alarmSign.SetActive(true);
-            yield return new WaitForSeconds(_alarmAnimator.
-                GetCurrentAnimatorClipInfo(0)[0].clip.length);
+            yield return new WaitForSeconds(_alarmAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.length);
             _alarmSign.SetActive(false);
         }
 
