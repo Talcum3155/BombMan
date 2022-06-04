@@ -161,7 +161,7 @@ MonoBehaviour:
   startTime: 0
   waitTime: 2
   isClosed: 0
-  bombDamage: 1
+  bombDamage: 2
   radius: 1.42
   targetLayer:
     serializedVersion: 2

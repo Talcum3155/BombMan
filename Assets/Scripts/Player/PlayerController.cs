@@ -1,5 +1,6 @@
 using System;
 using Enemy;
+using Manger;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -201,6 +202,8 @@ namespace Player
             }
 
             health = Mathf.Max(health - damage, 0);
+
+            UIManager.Instance.UpdateHealth(health);
 
             if (health == 0)
             {
