@@ -38,10 +38,10 @@ namespace Enemy.AllEnemy
         public readonly int Skill =
             Animator.StringToHash("Skill");
 
-        private static readonly int GetHit =
+        protected static readonly int GetHit =
             Animator.StringToHash("GetHit");
 
-        private static readonly int Dead =
+        protected static readonly int Dead =
             Animator.StringToHash("Dead");
 
 
@@ -189,7 +189,7 @@ namespace Enemy.AllEnemy
 
         #region 受伤或死亡
 
-        public void GetDamage(float damage)
+        public virtual void GetDamage(float damage)
         {
             health = Mathf.Max(health - damage, 0);
 

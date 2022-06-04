@@ -9,6 +9,7 @@ namespace Player
     {
         [Header("Parameters")] public float speed;
         public float jumpForce;
+        public bool isHurt;
         [Tooltip("跳跃到空中时的重力")] public float jumpGravityScale;
         public float health;
         public bool isDead;
@@ -64,6 +65,8 @@ namespace Player
             }
 
             CheckGround();
+
+            if (isHurt) return;
             Movement();
             JumpControl();
         }
@@ -137,6 +140,8 @@ namespace Player
 
         #region 动画事件
 
+        public void DisableHurt() => isHurt = false;
+
         public void ShowJumpFX()
         {
             jumpFX.SetActive(true);
@@ -190,7 +195,7 @@ namespace Player
         public void GetDamage(float damage)
         {
             //受伤的过程中是无敌的
-            if (_animator.GetCurrentAnimatorStateInfo(0).IsTag("HitLayer"))
+            if (isHurt)
             {
                 return;
             }
@@ -206,6 +211,7 @@ namespace Player
             }
 
             _animator.SetTrigger(GetHit);
+            isHurt = true;
         }
 
         #endregion
