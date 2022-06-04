@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Manger;
 using UnityEngine;
 
 namespace Enemy.AllEnemy
@@ -9,6 +10,7 @@ namespace Enemy.AllEnemy
     {
         [Header("Parameters")] public float health;
         public bool isDead;
+        public bool isBoss;
 
         [Header("Movement")] public float speed;
         public Transform pointA;
@@ -60,6 +62,11 @@ namespace Enemy.AllEnemy
         private void Start()
         {
             TransitionState(patrolState);
+
+            if (isBoss)
+            {
+                UIManager.Instance.bossHealthSlider.maxValue = health;
+            }
         }
 
         protected virtual void Update()
@@ -193,6 +200,12 @@ namespace Enemy.AllEnemy
         {
             health = Mathf.Max(health - damage, 0);
 
+            //如果是boss则更新boss血条
+            if (isBoss)
+            {
+                UIManager.Instance.bossHealthSlider.value = health;
+            }
+            
             if (health == 0)
             {
                 Debug.Log($"{gameObject.name}死亡");
