@@ -75,6 +75,9 @@ namespace Enemy.AllEnemy
                         // enemy.SwitchPoint();
                         Debug.Log("跑路");
                         break;
+                    //Captain技能的返回码，只需反跑，不需要做什么
+                    case 3:
+                        return;
                 }
             }
 

@@ -17,7 +17,7 @@ namespace Enemy.AllEnemy
         [Header("Attack")] public Transform targetPoint;
         public List<GameObject> targets = new List<GameObject>();
         public float attackCutDown;
-        private float _nextAttackTime;
+        protected float nextAttackTime;
         public float skillRange;
         public float attackRange;
 
@@ -62,7 +62,7 @@ namespace Enemy.AllEnemy
             TransitionState(patrolState);
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             if (isDead)
             {
@@ -118,10 +118,10 @@ namespace Enemy.AllEnemy
         {
             //距离够近且冷却已经结束才能进行攻击
             if (!(Vector2.Distance(transform.position,
-                targetPoint.position) <= attackRange) || !(Time.time >= _nextAttackTime)) return;
+                targetPoint.position) <= attackRange) || !(Time.time >= nextAttackTime)) return;
 
             animator.SetTrigger(Attack);
-            _nextAttackTime = Time.time + attackCutDown;
+            nextAttackTime = Time.time + attackCutDown;
         }
 
         public virtual int SkillAction()
@@ -133,13 +133,13 @@ namespace Enemy.AllEnemy
                 return 1; //返回1说明距离太远
             }
 
-            if (!(Time.time >= _nextAttackTime))
+            if (!(Time.time >= nextAttackTime))
             {
                 return 2; //返回2说明冷却时间不够
             }
 
             animator.SetTrigger(Skill);
-            _nextAttackTime = Time.time + attackCutDown;
+            nextAttackTime = Time.time + attackCutDown;
             return 0;
         }
 
