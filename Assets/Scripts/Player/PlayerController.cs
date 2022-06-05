@@ -48,6 +48,13 @@ namespace Player
             GameManager.Instance.RegisterPlayer(this);
         }
 
+        private void Start()
+        {
+            //游戏开始时加载血量，更新血量UI
+            health = SaveManager.Instance.Loadhealth(SaveManager.Instance.healthStr);
+            UIManager.Instance.UpdateHealth(health);
+        }
+
         private void Update()
         {
             if (isDead)

@@ -14,11 +14,29 @@ namespace Manger
 
         #region 血条控制
 
+        /// <summary>
+        /// 根据当前生命值更新血量UI
+        /// </summary>
+        /// <param name="currentHealth"></param>
         public void UpdateHealth(float currentHealth)
         {
-            for (var i = 0; i < 3 - currentHealth; i++)
+            switch (currentHealth)
             {
-                hearts[i].SetActive(false);
+                case 1:
+                    hearts[0].SetActive(false);
+                    hearts[1].SetActive(false);
+                    hearts[2].SetActive(true);
+                    break;
+                case 2:
+                    hearts[0].SetActive(false);
+                    hearts[1].SetActive(true);
+                    hearts[2].SetActive(true);
+                    break;
+                case 3:
+                    hearts[0].SetActive(true);
+                    hearts[1].SetActive(true);
+                    hearts[2].SetActive(true);
+                    break;
             }
         }
 
@@ -26,21 +44,33 @@ namespace Manger
 
         #region UI事件
 
+        /// <summary>
+        /// 暂停游戏
+        /// </summary>
         public void PauseGame()
         {
             pauseMenu.SetActive(true);
             Time.timeScale = 0;
         }
 
+        /// <summary>
+        /// 继续游戏
+        /// </summary>
         public void ResumeGame()
         {
             pauseMenu.SetActive(false);
             Time.timeScale = 1;
         }
 
+        /// <summary>
+        /// 重新开始游戏
+        /// </summary>
         public void RetryGame()
             => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
+        /// <summary>
+        /// GameOver菜单
+        /// </summary>
         public void GameOverMenu() => gameOverPanel.SetActive(true);
 
         #endregion

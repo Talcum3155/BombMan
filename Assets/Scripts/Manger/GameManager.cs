@@ -45,7 +45,7 @@ namespace Manger
                 door.OpenDoor();
             }
         }
-        
+
         /// <summary>
         /// 启用游戏结束菜单
         /// </summary>
@@ -54,7 +54,11 @@ namespace Manger
         /// <summary>
         /// 去到下一个场景
         /// </summary>
-        public void NextLevel() =>
+        public void NextLevel()
+        {
+            //只保存血量
+            SaveManager.Instance.SaveHealth(player.health, SaveManager.Instance.healthStr);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
     }
 }
