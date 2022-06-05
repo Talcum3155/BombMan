@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Manger
@@ -16,7 +15,7 @@ namespace Manger
             }
             
             Instance = (T) this;
-            DontDestroyOnLoad(this);
+            // DontDestroyOnLoad(this);
         }
     }
 }

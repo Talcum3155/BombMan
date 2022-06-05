@@ -1,4 +1,5 @@
 using System;
+using Manger;
 using UnityEngine;
 
 namespace FX

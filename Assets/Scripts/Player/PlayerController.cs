@@ -40,10 +40,12 @@ namespace Player
         private static readonly int GetHit = Animator.StringToHash("GetHit");
         private static readonly int Dead = Animator.StringToHash("Dead");
 
-        private void Start()
+        private void Awake()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
+            //向GameManager注册玩家
+            GameManager.Instance.RegisterPlayer(this);
         }
 
         private void Update()
@@ -210,6 +212,7 @@ namespace Player
                 Debug.Log("角色死亡");
                 isDead = true;
                 _animator.SetTrigger(Dead);
+                GameManager.Instance.GameOver();
                 return;
             }
 

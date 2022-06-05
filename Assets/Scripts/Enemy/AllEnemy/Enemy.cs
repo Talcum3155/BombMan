@@ -52,6 +52,7 @@ namespace Enemy.AllEnemy
             animator = GetComponent<Animator>();
             _alarmSign = transform.GetChild(0).gameObject;
             _alarmAnimator = _alarmSign.GetComponent<Animator>();
+            GameManager.Instance.AddEnemy(this);
         }
 
         protected virtual void Awake()
@@ -211,6 +212,7 @@ namespace Enemy.AllEnemy
                 Debug.Log($"{gameObject.name}死亡");
                 isDead = true;
                 animator.SetTrigger(Dead);
+                GameManager.Instance.RemoveEnemy(this);
                 return;
             }
 
