@@ -441,6 +441,10 @@ PrefabInstance:
       value: 0.1613641
       objectReference: {fileID: 0}
     - target: {fileID: 3192411396573046938, guid: 487b8485a7970494c8060106f10fe6f8, type: 3}
+      propertyPath: health
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192411396573046938, guid: 487b8485a7970494c8060106f10fe6f8, type: 3}
       propertyPath: targetPoint
       value: 
       objectReference: {fileID: 193506453}

@@ -15,6 +15,10 @@ namespace Manger
         [Header("Menu")] public GameObject pauseMenu;
         public GameObject gameOverPanel;
 
+        [Header("Joystick")] public FloatingJoystick joystick;
+        public Button attackButton;
+        public Button jumpButton;
+
         public void RegisterPlayerUI(GameObject o)
         {
             playerUI = o;
@@ -40,6 +44,11 @@ namespace Manger
         {
             switch (currentHealth)
             {
+                case 0:
+                    hearts[0].SetActive(false);
+                    hearts[1].SetActive(false);
+                    hearts[2].SetActive(false);
+                    break;
                 case 1:
                     hearts[0].SetActive(false);
                     hearts[1].SetActive(false);
@@ -117,6 +126,7 @@ namespace Manger
             yield return SceneManager.LoadSceneAsync(0);
             //禁用玩家UI
             playerUI.SetActive(false);
+            joystick.gameObject.SetActive(true);
             //禁用暂停菜单和boss血条
             pauseMenu.SetActive(false);
             bossHealthSlider.gameObject.SetActive(false);
@@ -129,7 +139,7 @@ namespace Manger
         /// </summary>
         public void PauseGame()
         {
-            Debug.Log("暂停游戏");
+            joystick.gameObject.SetActive(false);
             pauseMenu.SetActive(true);
             Time.timeScale = 0;
         }
@@ -139,6 +149,7 @@ namespace Manger
         /// </summary>
         public void ResumeGame()
         {
+            joystick.gameObject.SetActive(true);
             pauseMenu.SetActive(false);
             Time.timeScale = 1;
         }
@@ -149,14 +160,24 @@ namespace Manger
         public void RetryGame()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            joystick.gameObject.SetActive(true);
+            gameOverPanel.SetActive(false);
             Time.timeScale = 1;
             pauseMenu.SetActive(false);
+            GameManager.Instance.enemies.Clear();
+            //重新设置血量，不然重玩关卡会导致血量UI一直是零
+            UpdateHealth(3);
         }
 
         /// <summary>
         /// GameOver菜单
         /// </summary>
-        public void GameOverMenu() => gameOverPanel.SetActive(true);
+        public void GameOverMenu()
+        {
+            joystick.gameObject.SetActive(false);
+            gameOverPanel.SetActive(true);
+            GameManager.Instance.enemies.Clear();
+        }
 
         #endregion
     }

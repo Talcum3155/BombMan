@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Objects;
 using Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Manger
 {
@@ -10,8 +12,20 @@ namespace Manger
     {
         [Header("Component")] public PlayerController player;
         public Door door;
+        public Text number;
 
         public List<Enemy.AllEnemy.Enemy> enemies = new();
+
+        protected override void Awake()
+        {
+            base.Awake();
+            Application.targetFrameRate = 60;
+        }
+
+        private void Update()
+        {
+            number.text = enemies.Count.ToString();
+        }
 
         /// <summary>
         /// 注册玩家
@@ -57,6 +71,9 @@ namespace Manger
         /// </summary>
         public void NextLevel()
         {
+            //注销这一关玩家的按钮事件
+            UIManager.Instance.attackButton.onClick.RemoveListener(player.AttackByJoystick);
+            UIManager.Instance.jumpButton.onClick.RemoveListener(player.JumpByJoystick);
             //只保存血量
             SaveManager.Instance.SaveHealth(player.health, SaveManager.Instance.healthStr);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);

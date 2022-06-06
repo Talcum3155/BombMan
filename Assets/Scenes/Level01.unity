@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2138418249999741238, guid: 06b71d19441cfcb48bce37827ec55dfb, type: 3}
+      propertyPath: health
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 2138418250770898062, guid: 06b71d19441cfcb48bce37827ec55dfb, type: 3}
       propertyPath: m_Name
       value: Whale
@@ -177,6 +181,14 @@ PrefabInstance:
     - target: {fileID: 2138418250770898097, guid: 06b71d19441cfcb48bce37827ec55dfb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2138418250920197686, guid: 06b71d19441cfcb48bce37827ec55dfb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.88
+      objectReference: {fileID: 0}
+    - target: {fileID: 2138418251804377193, guid: 06b71d19441cfcb48bce37827ec55dfb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -7.03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06b71d19441cfcb48bce37827ec55dfb, type: 3}

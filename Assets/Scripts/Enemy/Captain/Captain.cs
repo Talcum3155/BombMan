@@ -19,7 +19,7 @@ namespace Enemy.Captain
             {
                 _spriteRenderer.flipX = true;
                 //炸弹在左边，向右跑
-                if (transform.position.x > targetPoint.position.x)
+                if (transform.position.x >= targetPoint.position.x)
                 {
                     transform.position = Vector2.MoveTowards(transform.position,
                         transform.position + Vector3.right,

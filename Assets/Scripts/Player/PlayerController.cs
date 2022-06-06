@@ -24,7 +24,11 @@ namespace Player
         public bool isGround;
 
         [Header("Component")] private Rigidbody2D _rigidbody2D;
+
         private Animator _animator;
+
+        //悬浮摇杆
+        public FloatingJoystick joystick;
 
         [Header("FX")] public GameObject jumpFX;
         public GameObject landFX;
@@ -49,13 +53,10 @@ namespace Player
             {
                 GameManager.Instance.RegisterPlayer(this);
             }
-        }
 
-        private void Start()
-        {
-            // //游戏开始时加载血量，更新血量UI
-            // health = SaveManager.Instance.Loadhealth(SaveManager.Instance.healthStr);
-            // UIManager.Instance.UpdateHealth(health);
+            joystick = UIManager.Instance.joystick;
+            UIManager.Instance.attackButton.onClick.AddListener(AttackByJoystick);
+            UIManager.Instance.jumpButton.onClick.AddListener(JumpByJoystick);
         }
 
         private void Update()
@@ -81,6 +82,7 @@ namespace Player
 
             if (isHurt) return;
             Movement();
+            MovementByJoyStick();
             JumpControl();
         }
 
@@ -89,6 +91,24 @@ namespace Player
         private void Movement()
         {
             var axisH = Input.GetAxis("Horizontal"); //获取的键程最大，只有-1与1
+
+            _rigidbody2D.velocity = new Vector2(axisH * speed, _rigidbody2D.velocity.y);
+
+            transform.eulerAngles = axisH switch
+            {
+                > 0 => Vector3.zero,
+                < 0 => Vector3.up * 180,
+                _ => transform.eulerAngles
+            };
+        }
+
+        private void MovementByJoyStick()
+        {
+            var axisH = joystick.Horizontal; //虚拟摇杆的操控方式
+            if (axisH == 0)
+            {
+                return;
+            }
 
             _rigidbody2D.velocity = new Vector2(axisH * speed, _rigidbody2D.velocity.y);
 
@@ -119,6 +139,12 @@ namespace Player
                 canJump = true;
         }
 
+        public void JumpByJoystick()
+        {
+            if (isGround)
+                canJump = true;
+        }
+
         private void CheckGround()
         {
             isGround = Physics2D.OverlapCircle(groundChecker.position, checkRadius, groundMask);
@@ -145,6 +171,13 @@ namespace Player
         private void Attack()
         {
             if (!(Time.time >= nextAttackTime && Input.GetButtonDown("Fire1"))) return;
+            Instantiate(projectile, transform.position, transform.rotation);
+            nextAttackTime = Time.time + attackCutDown;
+        }
+
+        public void AttackByJoystick()
+        {
+            if (!(Time.time >= nextAttackTime)) return;
             Instantiate(projectile, transform.position, transform.rotation);
             nextAttackTime = Time.time + attackCutDown;
         }
@@ -222,6 +255,8 @@ namespace Player
                 Debug.Log("角色死亡");
                 isDead = true;
                 _animator.SetTrigger(Dead);
+                //防止死后玩家乱飞
+                _rigidbody2D.velocity=Vector2.zero;
                 GameManager.Instance.GameOver();
                 return;
             }
