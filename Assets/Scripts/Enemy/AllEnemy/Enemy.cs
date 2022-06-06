@@ -66,7 +66,7 @@ namespace Enemy.AllEnemy
 
             if (isBoss)
             {
-                UIManager.Instance.bossHealthSlider.maxValue = health;
+                UIManager.Instance.RegisterBossHealthBar(health);
             }
         }
 

@@ -3,19 +3,16 @@ using UnityEngine;
 
 namespace Manger
 {
-    public class ObjectPools : MonoBehaviour
+    public class ObjectPools : Singleton<ObjectPools>
     {
-        public static ObjectPools Instance;
-
         [Header("RunFX")]
         public GameObject runFXPrefab;
         public int runFxCount;
         public readonly Queue<GameObject> RunFxPool = new Queue<GameObject>();
 
-        private void Awake()
+        protected override void Awake()
         {
-            Instance = this;
-        
+            base.Awake();
             FillPool();
         }
 
@@ -23,7 +20,9 @@ namespace Manger
         {
             for (var i = 0; i < runFxCount; i++)
             {
-                ReturnPool(Instantiate(runFXPrefab));
+                var runFX = Instantiate(runFXPrefab);
+                ReturnPool(runFX);
+                DontDestroyOnLoad(runFX);
             }
         }
 

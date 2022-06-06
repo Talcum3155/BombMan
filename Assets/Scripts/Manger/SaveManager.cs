@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Manger
 {
@@ -7,6 +8,7 @@ namespace Manger
     {
         public string healthStr = "PlayerHealth";
         public string positionStr = "PlayerPosition";
+        public string sceneStr = "SceneIndex";
         public string allInfoStr = "PlayerInfo";
 
         /// <summary>
@@ -16,15 +18,17 @@ namespace Manger
         {
             public float Health;
             public Vector3 PlayerPosition;
+            public int SceneIndex;
 
-            public PlayerInfo() : this(0, Vector3.zero)
+            public PlayerInfo() : this(0, Vector3.zero, 0)
             {
             }
 
-            public PlayerInfo(float health, Vector3 playerPosition)
+            public PlayerInfo(float health, Vector3 playerPosition, int sceneIndex)
             {
                 Health = health;
                 PlayerPosition = playerPosition;
+                SceneIndex = sceneIndex;
             }
         }
 
@@ -34,6 +38,7 @@ namespace Manger
             {
                 SaveAllInfo(GameManager.Instance.player.health,
                     GameManager.Instance.player.transform.position,
+                    SceneManager.GetActiveScene().buildIndex,
                     allInfoStr);
             }
 
@@ -58,20 +63,33 @@ namespace Manger
         public float Loadhealth(string key)
         {
             if (!PlayerPrefs.HasKey(key)) return 3f;
-            
+
             var playerInfo = new PlayerInfo();
             JsonUtility.FromJsonOverwrite(PlayerPrefs.GetString(key), playerInfo);
             return playerInfo.Health;
         }
 
-        public void SaveAllInfo(float health, Vector3 position, string key)
+        public int LoadScene(string key)
         {
-            var playerInfo = new PlayerInfo(health, position);
+            if (!PlayerPrefs.HasKey(key)) return 0;
+
+            var playerInfo = new PlayerInfo();
+            JsonUtility.FromJsonOverwrite(PlayerPrefs.GetString(key), playerInfo);
+            return playerInfo.SceneIndex;
+        }
+
+        public void SaveAllInfo(float health, Vector3 position, int sceneIndex, string key)
+        {
+            var playerInfo = new PlayerInfo(health, position, sceneIndex);
             var json = JsonUtility.ToJson(playerInfo, true);
             PlayerPrefs.SetString(key, json);
             PlayerPrefs.Save();
         }
 
-        public void SaveHealth(float health, string key) => SaveAllInfo(health, Vector3.zero, key);
+        public void SaveHealth(float health, string key)
+            => SaveAllInfo(health, Vector3.zero, 0, key);
+
+        public void SaveSceneIndex(int index, string key) =>
+            SaveAllInfo(0, Vector3.zero, SceneManager.GetActiveScene().buildIndex, key);
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using Bomb;
+using Manger;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -34,7 +35,7 @@ namespace Enemy.Whale
                         new Vector2(ps.x + Random.Range(-0.5f, 0.5f), ps.y);
                     bomb.TurnOn();
                 }
-
+                GameManager.Instance.RemoveEnemy(this);
                 return;
             }
 

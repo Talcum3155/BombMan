@@ -35,7 +35,10 @@ namespace Objects
                     break;
                 case DoorState.Exit:
                     //如果是出口就向GameManager注册自己
-                    GameManager.Instance.RegisterDoor(this);
+                    if (GameManager.Instance)
+                    {
+                        GameManager.Instance.RegisterDoor(this);
+                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

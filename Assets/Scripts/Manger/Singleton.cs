@@ -6,7 +6,7 @@ namespace Manger
     {
         public static T Instance;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             if (Instance)
             {
@@ -15,7 +15,7 @@ namespace Manger
             }
             
             Instance = (T) this;
-            // DontDestroyOnLoad(this);
+            DontDestroyOnLoad(this);
         }
     }
 }

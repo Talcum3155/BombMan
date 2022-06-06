@@ -38,6 +38,7 @@ namespace Manger
         /// <param name="enemy"></param>
         public void RemoveEnemy(Enemy.AllEnemy.Enemy enemy)
         {
+            Debug.Log("移除");
             enemies.Remove(enemy);
 
             if (enemies.Count == 0)

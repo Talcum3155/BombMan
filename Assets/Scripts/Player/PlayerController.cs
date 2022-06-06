@@ -45,14 +45,17 @@ namespace Player
             _rigidbody2D = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
             //向GameManager注册玩家
-            GameManager.Instance.RegisterPlayer(this);
+            if (GameManager.Instance)
+            {
+                GameManager.Instance.RegisterPlayer(this);
+            }
         }
 
         private void Start()
         {
-            //游戏开始时加载血量，更新血量UI
-            health = SaveManager.Instance.Loadhealth(SaveManager.Instance.healthStr);
-            UIManager.Instance.UpdateHealth(health);
+            // //游戏开始时加载血量，更新血量UI
+            // health = SaveManager.Instance.Loadhealth(SaveManager.Instance.healthStr);
+            // UIManager.Instance.UpdateHealth(health);
         }
 
         private void Update()
@@ -174,14 +177,14 @@ namespace Player
             }
 
             var runFx = ObjectPools.Instance.GetRunFXObject();
-            runFx.transform.parent = transform.parent;
-            runFx.transform.localEulerAngles = transform.localEulerAngles;
+            // runFx.transform.parent = transform.parent;
+            runFx.transform.eulerAngles = transform.eulerAngles;
 
-            runFx.transform.localPosition = runFx.transform.localEulerAngles.y switch
+            runFx.transform.position = runFx.transform.localEulerAngles.y switch
             {
-                <180 => transform.localPosition + new Vector3(-0.5f, -0.75f, 0),
-                >=180 => transform.localPosition + new Vector3(0.6f, -0.75f, 0),
-                _ => runFx.transform.localPosition
+                <180 => transform.position + new Vector3(-0.5f, -0.75f, 0),
+                >=180 => transform.position + new Vector3(0.6f, -0.75f, 0),
+                _ => runFx.transform.position
             };
             runFx.SetActive(true);
         }

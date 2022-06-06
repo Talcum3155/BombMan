@@ -18,7 +18,7 @@ namespace Enemy.AllEnemy
             //没有敌人时回到巡逻状态，animState的值设置回小于2的值，脱离Layer2
             if (enemy.targets.Count == 0)
             {
-                Debug.Log("回到巡逻状态");
+                // Debug.Log("回到巡逻状态");
                 enemy.TransitionState(enemy.patrolState);
                 return;
             }
@@ -35,7 +35,7 @@ namespace Enemy.AllEnemy
                     if (Mathf.Abs(enemy.transform.position.x - t.transform.position.x) <
                         Mathf.Abs(enemy.transform.position.x - enemy.targetPoint.position.x))
                     {
-                        Debug.Log("更换追踪");
+                        // Debug.Log("更换追踪");
                         enemy.targetPoint = t.transform;
                     }
                 }
@@ -48,7 +48,7 @@ namespace Enemy.AllEnemy
              */
             if (enemy.targets.Count == 1)
             {
-                Debug.Log("只剩一个目标");
+                // Debug.Log("只剩一个目标");
                 enemy.targetPoint = enemy.targets[0].transform;
             }
 
@@ -64,16 +64,16 @@ namespace Enemy.AllEnemy
                         {
                             enemy.targetPoint = enemy.targets[0].transform;
                         }
-                        Debug.Log("成功，更换目标");
+                        // Debug.Log("成功，更换目标");
                         return;
                     //距离太远就什么也不做
                     case 1:
-                        Debug.Log("太远了");
+                        // Debug.Log("太远了");
                         break;
                     //距离足够但是CD没到，就直接跑
                     case 2:
                         // enemy.SwitchPoint();
-                        Debug.Log("跑路");
+                        // Debug.Log("跑路");
                         break;
                     //Captain技能的返回码，只需反跑，不需要做什么
                     case 3:
