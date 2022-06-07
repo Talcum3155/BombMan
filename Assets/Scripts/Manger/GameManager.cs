@@ -12,7 +12,6 @@ namespace Manger
     {
         [Header("Component")] public PlayerController player;
         public Door door;
-        public Text number;
 
         public List<Enemy.AllEnemy.Enemy> enemies = new();
 
@@ -20,11 +19,6 @@ namespace Manger
         {
             base.Awake();
             Application.targetFrameRate = 60;
-        }
-
-        private void Update()
-        {
-            number.text = enemies.Count.ToString();
         }
 
         /// <summary>

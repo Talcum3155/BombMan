@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4749639714856961137
+--- !u!1 &4191794407891060172
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,50 +8,45 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4749639714856961138}
-  - component: {fileID: 4749639714856961139}
+  - component: {fileID: 4191794407891060018}
+  - component: {fileID: 4191794407891060019}
   m_Layer: 0
-  m_Name: UIManager
+  m_Name: AdsManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4749639714856961138
+--- !u!4 &4191794407891060018
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4749639714856961137}
+  m_GameObject: {fileID: 4191794407891060172}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 239.36592, y: 1019.5068, z: -1.993055}
+  m_LocalPosition: {x: 256.51825, y: 197.54904, z: -1.087546}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4749639714856961139
+--- !u!114 &4191794407891060019
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4749639714856961137}
+  m_GameObject: {fileID: 4191794407891060172}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 205f5f46028db8c48897e6c38d04a5ca, type: 3}
+  m_Script: {fileID: 11500000, guid: 2d00b07c964fd0c4696275ffcf2135f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerUI: {fileID: 0}
-  hearts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  bossHealthSlider: {fileID: 0}
-  pauseMenu: {fileID: 0}
-  gameOverPanel: {fileID: 0}
-  joystick: {fileID: 0}
-  attackButton: {fileID: 0}
-  jumpButton: {fileID: 0}
+  _showAdButton: {fileID: 0}
+  _androidAdUnitId: Rewarded_Android
+  _iOSAdUnitId: Rewarded_iOS
+  _androidGameId: 4787343
+  _iOSGameId: 4787342
+  _testMode: 1

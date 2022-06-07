@@ -176,7 +176,6 @@ namespace Manger
         {
             joystick.gameObject.SetActive(false);
             gameOverPanel.SetActive(true);
-            GameManager.Instance.enemies.Clear();
         }
 
         #endregion

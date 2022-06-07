@@ -14,6 +14,8 @@ namespace Player
         [Tooltip("跳跃到空中时的重力")] public float jumpGravityScale;
         public float health;
         public bool isDead;
+        public bool god;
+        private float _godTime = 2f;
 
         [Header("GroundCheck")] public LayerMask groundMask;
         public float checkRadius;
@@ -25,7 +27,7 @@ namespace Player
 
         [Header("Component")] private Rigidbody2D _rigidbody2D;
 
-        private Animator _animator;
+        public Animator animator;
 
         //悬浮摇杆
         public FloatingJoystick joystick;
@@ -43,11 +45,12 @@ namespace Player
         private static readonly int Ground = Animator.StringToHash("ground");
         private static readonly int GetHit = Animator.StringToHash("GetHit");
         private static readonly int Dead = Animator.StringToHash("Dead");
+        public static readonly int Resurrection = Animator.StringToHash("Resurrection");
 
         private void Awake()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
-            _animator = GetComponent<Animator>();
+            animator = GetComponent<Animator>();
             //向GameManager注册玩家
             if (GameManager.Instance)
             {
@@ -69,6 +72,7 @@ namespace Player
             StatusCheck();
             Attack();
             CheckAnimatorStatus();
+            ReduceGodTime();
         }
 
         private void FixedUpdate()
@@ -186,7 +190,10 @@ namespace Player
 
         #region 动画事件
 
-        public void DisableHurt() => isHurt = false;
+        public void DisableHurt()
+        {
+            isHurt = false;
+        }
 
         public void ShowJumpFX()
         {
@@ -203,7 +210,7 @@ namespace Player
 
         public void ShowRunFX()
         {
-            if (_animator.GetCurrentAnimatorStateInfo(1).IsTag("HitLayer"))
+            if (animator.GetCurrentAnimatorStateInfo(1).IsTag("HitLayer"))
             {
                 Debug.Log("不需要奔跑");
                 return;
@@ -228,20 +235,30 @@ namespace Player
 
         private void CheckAnimatorStatus()
         {
-            _animator.SetBool(Ground, isGround);
-            _animator.SetFloat(VelocityY, _rigidbody2D.velocity.y);
-            _animator.SetBool(Jump, isJump);
-            _animator.SetFloat(Speed, Mathf.Abs(_rigidbody2D.velocity.x));
+            animator.SetBool(Ground, isGround);
+            animator.SetFloat(VelocityY, _rigidbody2D.velocity.y);
+            animator.SetBool(Jump, isJump);
+            animator.SetFloat(Speed, Mathf.Abs(_rigidbody2D.velocity.x));
         }
 
         #endregion
 
         #region 受伤或死亡
 
+        public void ReduceGodTime()
+        {
+            if (!god) return;
+            _godTime -= Time.deltaTime;
+            if (!(_godTime <= 0)) return;
+            _godTime = 2f;
+            god = false;
+            animator.SetBool(Resurrection, false);
+        }
+
         public void GetDamage(float damage)
         {
             //受伤的过程中是无敌的
-            if (isHurt)
+            if (isHurt || god)
             {
                 return;
             }
@@ -254,14 +271,14 @@ namespace Player
             {
                 Debug.Log("角色死亡");
                 isDead = true;
-                _animator.SetTrigger(Dead);
+                animator.SetTrigger(Dead);
                 //防止死后玩家乱飞
-                _rigidbody2D.velocity=Vector2.zero;
+                _rigidbody2D.velocity = Vector2.zero;
                 GameManager.Instance.GameOver();
                 return;
             }
 
-            _animator.SetTrigger(GetHit);
+            animator.SetTrigger(GetHit);
             isHurt = true;
         }
 
